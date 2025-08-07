@@ -13,14 +13,14 @@ public class OFile {
      *
      * @param stats the Object containing the statistics
      */
-    public void createFileLettersData(Statistics stats){
+    public void createLetterTableSumFile(Statistics stats){
         try {
-            BufferedWriter writer = new BufferedWriter(new java.io.FileWriter("lettersData.csv"));
+            BufferedWriter writer = new BufferedWriter(new java.io.FileWriter("data/letterTableSum.csv"));
             //This statement is in try in case there is a problem
 
             for(int i=0; i<26; i++){
                 for(int j=0; j<26; j++){
-                    Integer value = stats.arrayStats[i][j]; //stores the value of a cell
+                    Integer value = stats.nbOfSuccessorTable[i][j]; //stores the value of a cell
                     writer.write(value.toString());         //write the value in the file
                     writer.write(" ");
                 }
@@ -38,23 +38,43 @@ public class OFile {
      * For each column or row letter, it displays the sum of the column or row
      * @param stats the Object containing the statistics
      */
-    public void createFileRowsColumnsData(Statistics stats){
+    public void createRowsColumnsSumFile(Statistics stats){
         try {
-            BufferedWriter writer = new BufferedWriter(new java.io.FileWriter("rowsColumnsData.csv"));
+            BufferedWriter writerRows = new BufferedWriter(new java.io.FileWriter("data/rowsLetterSum.csv"));
+            BufferedWriter writerColumns = new BufferedWriter(new java.io.FileWriter("data/columnsLetterSum.csv"));
             //This statement is in try in case there is a problem
 
-            writer.write("Rows" + "\n");
-            for (int i=0; i<26; i++){
-                writer.write(('a' + i) + " " + stats.nbOfRows[i] + "\n");
+            for (int i=0; i<stats.characterNumber; i++){
+                writerRows.write(('a' + i) + " " + stats.nbOfSumRows[i] + "\n");
             }
             //write "rows" in the file followed by the unicode of each letter and the sum of the current row
 
-            writer.write("Columns" + "\n");
-            for (int j=0; j<26; j++){
-                writer.write(('a' + j) + " " + stats.nbOfCColumns[j] + "\n");
+            for (int j=0; j<stats.characterNumber; j++){
+                writerColumns.write(('a' + j) + " " + stats.nbOfSumColumns[j] + "\n");
             }
             //write "columns" in the file followed by the unicode of each letter and the sum of the current row
 
+            writerColumns.close();
+            writerRows.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createNextLetterProbabilityFile(Statistics stats){
+        try {
+            BufferedWriter writer = new BufferedWriter(new java.io.FileWriter("data/nextLetterProbability.csv"));
+            //This statement is in try in case there is a problem
+
+            for(int i=0; i<stats.characterNumber; i++){
+                for(int j=0; j<stats.characterNumber; j++){
+                    Float value = stats.SuccessorProbabiltyTable[i][j];
+                    writer.write(value.toString());         //write the value in the file
+                    writer.write(" ");
+                }
+                writer.write("\n");
+            }
             writer.close();
 
         } catch (IOException e) {
